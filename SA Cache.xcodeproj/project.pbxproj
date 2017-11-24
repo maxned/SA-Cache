@@ -25,6 +25,9 @@
 /* Begin PBXFileReference section */
 		900FD9F41FC8AA5F0060A192 /* SA Cache */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "SA Cache"; sourceTree = BUILT_PRODUCTS_DIR; };
 		900FD9F71FC8AA5F0060A192 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		900FD9FE1FC8AA880060A192 /* saTest500-out.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "saTest500-out.txt"; sourceTree = "<group>"; };
+		900FD9FF1FC8AA880060A192 /* saTest500.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = saTest500.txt; sourceTree = "<group>"; };
+		900FDA001FC8AA980060A192 /* README */ = {isa = PBXFileReference; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +61,9 @@
 			isa = PBXGroup;
 			children = (
 				900FD9F71FC8AA5F0060A192 /* main.cpp */,
+				900FDA001FC8AA980060A192 /* README */,
+				900FD9FE1FC8AA880060A192 /* saTest500-out.txt */,
+				900FD9FF1FC8AA880060A192 /* saTest500.txt */,
 			);
 			path = "SA Cache";
 			sourceTree = "<group>";
