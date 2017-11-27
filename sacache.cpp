@@ -9,6 +9,7 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <sstream>
 
 using namespace std;
 
@@ -17,12 +18,12 @@ enum Operation { Read = 0x00, Write = 0xFF};
 
 class CacheLine
 {
-    int cacheLine[4] = { 0 };
+    int cacheLine[4];
 
 public:
-    bool dirty = 0;
-    int tag = 0;
-    int lastUsed = 0;
+    bool dirty;
+    int tag;
+    int lastUsed;
 
     void writeDataToOffset(int data, int offset)
     {
@@ -56,14 +57,24 @@ struct InputInfo
 {
     InputInfo(string strAddress, string strOperation, string strData)
     {
-        int address = stoi(strAddress, nullptr, 16);
+        int address;
+        stringstream ss;
+        ss << hex << strAddress;
+        ss >> address;
 
         tag = (address & 0xFFC0) >> 6; // isolate tag and shift right 6 bits
         setNumber = (address & 0x003C) >> 2;
         offset = address & 0x0003;
 
-        operation = stoi(strOperation, nullptr, 16) != 0 ? Write : Read;
-        data = stoi(strData, nullptr, 16);
+        int op;
+        stringstream ss2;
+        ss2 << hex << strOperation;
+        ss2 >> op;
+        if (op != 0) operation = Write; else operation = Read;
+
+        stringstream ss3;
+        ss3 << hex << strData;
+        ss3 >> data;
     }
 
     int tag;
@@ -102,6 +113,7 @@ class Set
 
     void updateLRUExceptCurrent(int currentLine)
     {
+        line[currentLine].lastUsed = 0;
         for (int i = 0; i < 8; i++)
             if (i != currentLine)
                 line[i].lastUsed++;
@@ -142,7 +154,6 @@ public:
         }
 
         updateLRUExceptCurrent(LRULine);
-        line[LRULine].lastUsed = 0;
     }
 
     Hit readDataAtOffsetWithTag(int &data, int offset, int dataTag, int evictedData[6]) // evictedData stores the old tag in the second to last position and dirty bit in the last position
@@ -177,7 +188,7 @@ int main(int argc, char **argv)
     fileName = argv[1];
 
     ifstream inputFile;
-    inputFile.open(fileName);
+    inputFile.open(fileName.c_str());
 
     ofstream outputFile;
     outputFile.open("sa-out.txt");
