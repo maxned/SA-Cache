@@ -238,6 +238,8 @@
 		900FD9FC1FC8AA5F0060A192 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++98";
+				CLANG_CXX_LIBRARY = "libstdc++";
 				CODE_SIGN_STYLE = Automatic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -246,6 +248,8 @@
 		900FD9FD1FC8AA5F0060A192 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++98";
+				CLANG_CXX_LIBRARY = "libstdc++";
 				CODE_SIGN_STYLE = Automatic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
