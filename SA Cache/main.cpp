@@ -25,6 +25,16 @@ public:
     int tag;
     int lastUsed;
 
+    CacheLine()
+    {
+        dirty = true;
+        tag = 0;
+        lastUsed = 0;
+
+        for (int i = 0; i < 4; i++)
+            cacheLine[i] = 0;
+    }
+
     void writeDataToOffset(int data, int offset)
     {
         dirty = true;
@@ -55,26 +65,15 @@ public:
 
 struct InputInfo
 {
-    InputInfo(string strAddress, string strOperation, string strData)
+    InputInfo(int inAddress, int inOperation, int inData)
     {
-        int address;
-        stringstream ss;
-        ss << hex << strAddress;
-        ss >> address;
+        tag = (inAddress & 0xFFC0) >> 6; // isolate tag and shift right 6 bits
+        setNumber = (inAddress & 0x003C) >> 2;
+        offset = inAddress & 0x0003;
 
-        tag = (address & 0xFFC0) >> 6; // isolate tag and shift right 6 bits
-        setNumber = (address & 0x003C) >> 2;
-        offset = address & 0x0003;
+        if (inOperation != 0) operation = Write; else operation = Read;
 
-        int op;
-        stringstream ss2;
-        ss2 << hex << strOperation;
-        ss2 >> op;
-        if (op != 0) operation = Write; else operation = Read;
-
-        stringstream ss3;
-        ss3 << hex << strData;
-        ss3 >> data;
+        data = inData;
     }
 
     int tag;
@@ -176,8 +175,8 @@ public:
 };
 
 void manipulateCache(InputInfo inputInfo, ofstream &outputFile);
-int RAMAddress(int tag, int lineNumber);
-void storeAndFetchDataFromRAM(int oldTag, int lineNumber, int evictedData[4], int newDataFromRAM[4], int newTag);
+int RAMAddress(int tag, int setNumber);
+void storeAndFetchDataFromRAM(int oldTag, int setNumber, int evictedData[4], int newDataFromRAM[4], int newTag);
 
 int RAM[65536] = { 0 };
 Set cache[16];
@@ -189,11 +188,12 @@ int main(int argc, char **argv)
 
     ifstream inputFile;
     inputFile.open(fileName.c_str());
+    inputFile >> hex;
 
     ofstream outputFile;
     outputFile.open("sa-out.txt");
 
-    string address, operation, data;
+    int address, operation, data;
     while (inputFile >> address && inputFile >> operation && inputFile >> data)
     {
         InputInfo inputInfo = InputInfo(address, operation, data);
